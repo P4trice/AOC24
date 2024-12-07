@@ -38,13 +38,9 @@ for (let line of lines) {
 
 let data: number[][] = convert(part_2);
 
-//convert part_2 to number-arrays
-
 const lookup: KeyValue = parseRules(part_1);
+//console.log(lookup);
 console.log(exeRules(lookup, data));
-
-//console.log("part1: ", part_1);
-//console.log("part2: ", part_2);
 
 /*
   Function to create the rules per entry
@@ -76,7 +72,8 @@ function convert(part_2: string[]): number[][] {
 function exeRules(lookup: KeyValue, data: number[][]): number {
   let sum: number = 0;
   for (let k = 0; k < data.length; k++) {
-    if (checkRule(lookup, data[k])) {
+    if (!checkRule(lookup, data[k])) {
+      correctLine(data[k]);
       sum = sum + data[k][Math.floor(data[k].length / 2)];
     }
   }
@@ -87,14 +84,9 @@ function checkRule(lookup: KeyValue, data: number[]): boolean {
   let beforeSplice: number[] = [];
   let afterSplice: number[] = [];
   let isRowTrue: boolean = true;
-  console.log("data: ", data);
-  console.log("data length: ", data.length);
   for (let i = 0; i < data.length; i++) {
-    console.log("index: ", data[i]);
     beforeSplice = data.slice(0, i);
     afterSplice = data.slice(i + 1);
-    console.log("before: ", beforeSplice);
-    console.log("after: ", afterSplice);
     for (let j = 0; j < beforeSplice.length; j++) {
       if (lookup[data[i]].after.includes(beforeSplice[j])) {
         isRowTrue = false;
@@ -106,6 +98,48 @@ function checkRule(lookup: KeyValue, data: number[]): boolean {
       }
     }
   }
-  console.log("eval: ", isRowTrue);
   return isRowTrue;
+}
+
+function correctLine(data: number[]) {
+  let beforeSplice: number[] = [];
+  let afterSplice: number[] = [];
+  let swapIndex: number = 0;
+
+  for (let i = 0; i < data.length; i++) {
+    let swap: boolean = false;
+    beforeSplice = data.slice(0, i);
+    afterSplice = data.slice(i + 1);
+
+    for (let j = beforeSplice.length - 1; j >= 0; j--) {
+      if (lookup[data[i]].after.includes(beforeSplice[j])) {
+        swapIndex = j;
+        swap = true;
+        break;
+      }
+    }
+
+    if (swap) {
+      const current = data.splice(i, 1)[0];
+      data.splice(swapIndex, 0, current);
+      i = -1;
+      continue;
+    }
+
+    for (let j = 0; j < afterSplice.length; j++) {
+      if (lookup[data[i]].before.includes(afterSplice[j])) {
+        swapIndex = data.indexOf(afterSplice[j]);
+        swap = true;
+        break;
+      }
+    }
+
+    if (swap) {
+      const current = data.splice(i, 1)[0];
+      data.splice(swapIndex, 0, current);
+      i = -1;
+    }
+  }
+
+  return data;
 }

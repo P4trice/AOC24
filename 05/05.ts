@@ -87,14 +87,9 @@ function checkRule(lookup: KeyValue, data: number[]): boolean {
   let beforeSplice: number[] = [];
   let afterSplice: number[] = [];
   let isRowTrue: boolean = true;
-  console.log("data: ", data);
-  console.log("data length: ", data.length);
   for (let i = 0; i < data.length; i++) {
-    console.log("index: ", data[i]);
     beforeSplice = data.slice(0, i);
     afterSplice = data.slice(i + 1);
-    console.log("before: ", beforeSplice);
-    console.log("after: ", afterSplice);
     for (let j = 0; j < beforeSplice.length; j++) {
       if (lookup[data[i]].after.includes(beforeSplice[j])) {
         isRowTrue = false;
@@ -106,6 +101,5 @@ function checkRule(lookup: KeyValue, data: number[]): boolean {
       }
     }
   }
-  console.log("eval: ", isRowTrue);
   return isRowTrue;
 }
