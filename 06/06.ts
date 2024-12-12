@@ -1,4 +1,4 @@
-const raw = await Deno.readTextFile("./06.txt");
+const raw = await Deno.readTextFile("./06demo.txt");
 const lines = raw.split("\n");
 const playingField: string[][] = [];
 const height = lines.length - 1;
@@ -10,6 +10,7 @@ const width = playingField[0].length;
 const startingPosition = findStartingPos();
 mapPath(startingPosition[0], startingPosition[1]);
 let result = countVisitedPos();
+//console.table(playingField);
 console.log(result);
 
 function findStartingPos(): number[] {
@@ -99,6 +100,7 @@ function isRepeating(x: number, y: number, dir: string): boolean {
     //console.log(x);
     //console.log(y);
   }
+  return false;
 }
 
 function countVisitedPos() {
